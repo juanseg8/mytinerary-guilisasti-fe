@@ -1,6 +1,22 @@
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import Swal from 'sweetalert2';
+import "./styles.css"
 
+const Toast = Swal.mixin({
+    toast: true,
+    position: 'bottom-end',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    customClass: {
+        popup: 'colored-toast'
+    },
+    didOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer)
+        toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
+})
 
 
 export const register = createAsyncThunk("register", async (body) => {
@@ -10,6 +26,13 @@ export const register = createAsyncThunk("register", async (body) => {
         return response.data
     } catch (error) {
         console.log(error);
+        Toast.fire({
+            icon: 'error',
+            iconColor:"black",
+            title: 'Error',
+            text:"There is any error, check the data",
+            position:"top"
+        })
     }
 
 })
@@ -21,6 +44,13 @@ export const login = createAsyncThunk("sign_in", async (body) => {
         return response.data
     } catch (error) {
         console.log(error.message.data);
+        Toast.fire({
+            icon: 'error',
+            iconColor:"black",
+            title: 'Error',
+            text:"Your email or password is wrong",
+            position:"top"
+        })
     }
 })
 
